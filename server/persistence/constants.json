@@ -1,0 +1,8 @@
+{
+    "filters":{
+        "years": ["1890", "2024"],
+        "genre": ["action", "adventure", "animation", "comedy","crime","documentary","drama","family","fantasy","history","horror","music","mystery","romance","science-fiction","thriller","tv-movie","war","western"]
+    },
+    "url": "https://letterboxd.com/films/popular/",
+    "page-limit": 72
+}
