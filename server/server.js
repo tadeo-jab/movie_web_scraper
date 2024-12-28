@@ -1,24 +1,13 @@
 const express = require("express")
 const { spawn } = require('child_process');
-
+const scraperPersistence = require('./persistence/scraper-persistence.json');
 
 const app = express()
 
-const constants = {
-    filters:{
-        year: ["1890", "1980", "1990", "2000", "2010"],
-        genre: ["action", "adventure", "animation", "comedy","crime","documentary","drama","family","fantasy","history","horror","music","mystery","romance","science-fiction","thriller","tv-movie","war","western"]
-    },
-    url: "https://letterboxd.com/films/popular/",
-    pagelimit: 72
-}
-
-app.get("/api", (req, res) => {
-    res.json("xd")
-})
 
 app.get('/search', (req, res) => {
-    const pythonProcess = spawn('python', ['scraper/letterboxd_scraper.py', JSON.stringify(req.query), JSON.stringify(constants)]);
+
+    const pythonProcess = spawn('python', ['scraper/imdb_scraper.py', JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
 
     let dataBuffer = '';
 
@@ -30,11 +19,13 @@ app.get('/search', (req, res) => {
         console.error(`Error: ${data}`);
     });
 
+
+
     pythonProcess.on('close', (code) => {
         if (code === 0) {
         try {
-            const parsedData = JSON.parse(dataBuffer);
-            res.status(200).json(parsedData);
+            const scrapedData = JSON.parse(dataBuffer);
+            res.status(200).json(scrapedData);
         } catch (err) {
             res.status(500).json({ error: 'Failed to parse Python script output' });
         }
