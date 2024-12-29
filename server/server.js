@@ -3,11 +3,16 @@ const { spawn } = require('child_process');
 const scraperPersistence = require('./persistence/scraper-persistence.json');
 
 const app = express()
+const scraperPath = 'scraper/imdb_scraper.py'
+
+app.get("/filters", (req, res)=>{
+    res.status(200).json(scraperPersistence)
+})
 
 
 app.get('/search', (req, res) => {
 
-    const pythonProcess = spawn('python', ['scraper/imdb_scraper.py', JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
+    const pythonProcess = spawn('python', [scraperPath, JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
 
     let dataBuffer = '';
 

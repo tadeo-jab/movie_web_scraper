@@ -1,8 +1,13 @@
 {
     "filters":{
-        "years": ["1890", "2024"],
-        "genre": ["action", "adventure", "animation", "comedy","crime","documentary","drama","family","fantasy","history","horror","music","mystery","romance","science-fiction","thriller","tv-movie","war","western"]
+        "release_date": ["1990-01-01", "2000-01-01", "2022-01-01"],
+        "genres": ["action", "comedy", "horror"],
+        "title_type": ["feature", "tv_series", "short"],
+        "user_rating": ["2.5", "9.8"],
+        "certificates": ["US:PG-13", "US:G", "US:NC-17"],
+        "country_of_origin": ["AR", "IN", "KR"],
+        "role": ["nm0000168","nm0000233"]
     },
-    "url": "https://letterboxd.com/films/popular/",
+    "url": "https://www.imdb.com/search/title/?",
     "page-limit": 72
 }
