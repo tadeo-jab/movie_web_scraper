@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
 import './App.css'
+import FilterBlock from "./Components/FilterBlock.jsx"
 
 async function requestData(query, hook){
   let path = "/search"
@@ -44,11 +45,21 @@ function App(){
   const [filters, setFilters] = useState({})
   const [serverData, setServerData] = useState({name: null, image: null})
 
+  const [selected, setSelected] = useState({})
+
   const [year, setYear] = useState(yearOptions[0])
   const [genre, setGenre] = useState(genreOptions[0])
   
   useEffect(()=>{
     setFilters(filterData.filters)
+
+    const defaultOptions = {}
+    for (let [fil, val] of Object.entries(filterData.filters)) {
+      defaultOptions[fil] = val[0]
+    }
+
+    setSelected(defaultOptions)
+
   }, [])
 
   useEffect( () =>{
@@ -61,33 +72,12 @@ function App(){
       <h1> Encuentra tu película </h1>
 
       <section>
-        {Object.keys(filters).map((filter, k)=>(
-          <div> {filters[filter]} </div>
+        {Object.keys(filters).map((fil, k)=>(
+          <FilterBlock filter={fil} filterOptions={filters[fil]} selected={selected[fil]} setOptions={setSelected}/>
         ))}
       </section>
 
-      <section>
-        <article class="filter-select">
-          <p> Año: </p>
-          <button onClick={()=> document.getElementById("dropdown-year").classList.toggle("show")}>{year}</button>
-          <div>
-            {yearOptions.map((i, j) => (
-              <button key={j} onClick={() => setYear(i)}>{i}</button>
-            ))}
-          </div>
-        </article>
-        <article class="filter-select">
-          <p> Género: </p>
-          <button onClick={()=> document.getElementById("dropdown-genre").classList.toggle("show")}>{genre}</button>
-          <div>
-            {genreOptions.map((i, j) => (
-              <button key={j} onClick={() => setGenre(i)}>{i}</button>
-            ))}
-          </div>
-        </article>
-      </section>
-
-      <button onClick = {()=>requestData({year, genre}, setServerData)} id="search-button">Buscar</button>
+      <button onClick = {()=>requestData(selected, setServerData)} id="search-button">Buscar</button>
 
       <div class="movie-block">
         <img src={serverData.image} ></img>
