@@ -30,38 +30,23 @@ async function requestFilters() {
   return await incomingData.json()
 }
 
-const filterData = {
-  filters: {
-    years: ["1","2","3"],
-    genre: ["a","b","c"],
-    type: ["!","?","$"],
-  }
-}
 
 function App(){
-  const yearOptions = ["Cualquiera", "1980", "1990", "2000", "2010", "2020"]
-  const genreOptions = ["Cualquiera", "action", "adventure", "animation", "comedy","crime","documentary","drama","family","fantasy","history","horror","music","mystery","romance","science-fiction","thriller","tv-movie","war","western"]
-
   const [filters, setFilters] = useState({})
   const [serverData, setServerData] = useState({name: null, image: null})
 
   const [selected, setSelected] = useState({})
-
-  const [year, setYear] = useState(yearOptions[0])
-  const [genre, setGenre] = useState(genreOptions[0])
   
   useEffect(()=>{
-    const requestData = requestFilters()
+    requestFilters().then((data)=>{
+      setFilters(data.filters)
 
-    setFilters(requestData.filters)
-
-    const defaultOptions = {}
-    for (let [fil, val] of Object.entries(requestData.filters)) {
-      defaultOptions[fil] = val[0]
-    }
-
-    setSelected(defaultOptions)
-
+      const defaultOptions = {}
+      for (let [fil, val] of Object.entries(data.filters)) {
+        defaultOptions[fil] = val[0]
+      }
+      setSelected(defaultOptions)
+    })
   }, [])
 
   useEffect( () =>{
