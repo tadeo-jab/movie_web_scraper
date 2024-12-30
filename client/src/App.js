@@ -51,10 +51,12 @@ function App(){
   const [genre, setGenre] = useState(genreOptions[0])
   
   useEffect(()=>{
-    setFilters(filterData.filters)
+    const requestData = requestFilters()
+
+    setFilters(requestData.filters)
 
     const defaultOptions = {}
-    for (let [fil, val] of Object.entries(filterData.filters)) {
+    for (let [fil, val] of Object.entries(requestData.filters)) {
       defaultOptions[fil] = val[0]
     }
 
