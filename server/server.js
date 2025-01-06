@@ -7,7 +7,7 @@ const scraperPath = 'scraper/imdb_scraper.py'
 
 const sampleSelect = {
     genres: ['Crime', 'Thriller'],
-    country: ['US'],
+    country: 'US',
     date: {"end": "2024-12-31", "start": "1980-01-01"},
     runtime: {"max": 180, "min": 1},
     actor: 'nm0000233',

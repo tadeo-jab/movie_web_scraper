@@ -25,13 +25,13 @@
         }
     },
     "search_utils": {
-        "count": 200,
+        "count": 50,
         "headers": {
             "Content-type":"application/json", 
             "Accept":"application/json"
         },
-        "sort_options": ["POPULARITY", "TITLE_REGIONAL", "USER_RATING", "USER_RATING_COUNT", "BOX_OFFICE_GROSS_DOMESTIC", "RUNTIME", "YEAR", "RELEASE_DATE"],
-        "order_options": ["ASC", "DESC"],
+        "sort_options": ["USER_RATING"],
+        "order_options": ["DESC"],
         "excluded_genres": [
             "Talk-Show",
             "Reality-TV",
