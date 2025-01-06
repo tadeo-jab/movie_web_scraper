@@ -8,6 +8,37 @@
         "country_of_origin": ["AR", "IN", "KR"],
         "role": ["nm0000168","nm0000233"]
     },
-    "url": "https://www.imdb.com/search/title/?",
-    "page-limit": 72
+    "url": {
+        "base_url": "https://caching.graphql.imdb.com/",
+        "operation_name" : "AdvancedTitleSearch",
+        "variables": {
+            "first": 0,
+            "locale": "en-US",
+            "sortBy": "",
+            "sortOrder": ""
+        },
+        "extensions": {
+            "persistedQuery": {
+            "sha256Hash": "60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00",
+            "version": 1
+            }
+        }
+    },
+    "search_utils": {
+        "count": 200,
+        "headers": {
+            "Content-type":"application/json", 
+            "Accept":"application/json"
+        },
+        "sort_options": ["POPULARITY", "TITLE_REGIONAL", "USER_RATING", "USER_RATING_COUNT", "BOX_OFFICE_GROSS_DOMESTIC", "RUNTIME", "YEAR", "RELEASE_DATE"],
+        "order_options": ["ASC", "DESC"],
+        "excluded_genres": [
+            "Talk-Show",
+            "Reality-TV",
+            "News",
+            "Game-Show",
+            "Documentary",
+            "Short"
+        ]
+    }
 }

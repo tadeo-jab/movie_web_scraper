@@ -5,6 +5,18 @@ const scraperPersistence = require('./persistence/scraper-persistence.json');
 const app = express()
 const scraperPath = 'scraper/imdb_scraper.py'
 
+const sampleSelect = {
+    genres: ['Crime', 'Thriller'],
+    country: ['US'],
+    date: {"end": "2024-12-31", "start": "1980-01-01"},
+    runtime: {"max": 180, "min": 1},
+    actor: 'nm0000233',
+    director: 'nm0000168',
+    type: 'movie',
+    rating: {"max": 9.9, "min": 5},
+    parental: 'R'
+}
+
 app.get("/filters", (req, res)=>{
     res.status(200).json(scraperPersistence)
 })
@@ -12,7 +24,8 @@ app.get("/filters", (req, res)=>{
 
 app.get('/search', (req, res) => {
 
-    const pythonProcess = spawn('python', [scraperPath, JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
+    //JSON.stringify(req.query)
+    const pythonProcess = spawn('python', [scraperPath, JSON.stringify(sampleSelect), JSON.stringify(scraperPersistence)]);
 
     let dataBuffer = '';
 

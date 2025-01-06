@@ -33,7 +33,7 @@ async function requestFilters() {
 
 function App(){
   const [filters, setFilters] = useState({})
-  const [serverData, setServerData] = useState({name: null, image: null})
+  const [serverData, setServerData] = useState(null)
 
   const [selected, setSelected] = useState({})
   
@@ -66,10 +66,6 @@ function App(){
 
       <button onClick = {()=>requestData(selected, setServerData)} id="search-button">Buscar</button>
 
-      <div class="movie-block">
-        <img src={serverData.image} ></img>
-        <h1>{serverData.name}</h1>
-      </div>
     </main>
   )
 }
