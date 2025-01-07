@@ -86,13 +86,8 @@ def url_builder(var_data):
         })
     
     #Can't be empty nor deleted
-    if (var_data.get('people', None)) != None:
-        url_variables.update({
-            'titleCreditsConstraint':{
-                'allCredits': [{"nameId":"nm0000233"}],
-                'excludeCredits': [{"nameId":"nm0000168"}]
-            }
-        })
+    #Actually, it can.
+    
     
     query_params = {
     "operationName": url_data['operation_name'],
@@ -111,39 +106,24 @@ def url_builder(var_data):
 
     
 
-def get_movies_from_page(url):
-
-    #res = requests.get(unquote(url), headers=search_data['headers'])
+def get_movies(url):
     res = requests.get(url, headers=search_data['headers'])
 
     page_data = res.json()["data"]["advancedTitleSearch"]
-
-    movies_payload = {}
-
-    if not page_data['pageInfo']['hasPreviousPage']:
-        movies_payload['search-data'] = {
-            'count': page_data['total'],
-            'next-cursor': page_data['pageInfo']['endCursor']
-        }
-    elif page_data['pageInfo']['hasNextPage']:
-        movies_payload['search-data'] = {
-            'next-cursor': page_data['pageInfo']['endCursor']
-        }
-    
-    movies_payload['movies'] = []
+    movies_payload = {'movies':[]}
 
     for m in page_data['edges']:
         m_data = m['node']['title']
 
         current_movie = {
-            'id': m_data['id'],
-            'title': m_data['titleText']['text'],
-            'type': m_data['titleType']['text'],
-            'image': m_data['primaryImage']['url'],
-            'year': m_data['releaseYear']['year'],
-            'rating': m_data['ratingsSummary']['aggregateRating'],
-            'genres': [g['genre']['text'] for g in m_data['titleGenres']['genres']],
-            'plot': m_data['plot']['plotText']['plainText']
+            'id': m_data.get('id', {}),
+            'title': m_data.get('titleText', {}).get('text', {}) if(m_data.get('titleText', {}) != None) else None,
+            'type': m_data.get('titleType', {}).get('text', {}) if(m_data.get('titleType', {}) != None) else None,
+            'image': m_data.get('primaryImage', {}).get('url', {}) if(m_data.get('primaryImage', {}) != None) else None,
+            'year': m_data.get('releaseYear', {}).get('year', {}) if(m_data.get('releaseYear', {}) != None) else None,
+            'rating': m_data.get('ratingsSummary', {}).get('aggregateRating', {}) if(m_data.get('ratingsSummary', {}) != None) else None,
+            'genres': [g['genre']['text'] for g in m_data['titleGenres']['genres']] if(m_data.get('titleGenres', {}) != None) else None,
+            'plot': m_data.get('plot', {}).get('plotText', {}).get('plainText', {}) if((m_data.get('plot', {}) != None) and (m_data.get('plot', {}).get('plotText', {}) != None)) else None
         }
 
         movies_payload['movies'].append(current_movie)
@@ -172,14 +152,19 @@ def scrape_data_main(query):
         search_url = url_builder(new_query)
         #movie_list = get_movies_from_page('https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables=%7B%22certificateConstraint%22%3A%7B%22anyRegionCertificateRatings%22%3A%5B%7B%22rating%22%3A%22R%22%2C%22region%22%3A%22US%22%7D%5D%2C%22excludeRegionCertificateRatings%22%3A%5B%5D%7D%2C%22first%22%3A50%2C%22genreConstraint%22%3A%7B%22allGenreIds%22%3A%5B%22Crime%22%2C%22Thriller%22%5D%2C%22excludeGenreIds%22%3A%5B%22Talk-Show%22%2C%22Reality-TV%22%2C%22News%22%2C%22Game-Show%22%2C%22Documentary%22%2C%22Short%22%5D%7D%2C%22locale%22%3A%22en-US%22%2C%22originCountryConstraint%22%3A%7B%22anyPrimaryCountries%22%3A%5B%22US%22%5D%7D%2C%22releaseDateConstraint%22%3A%7B%22releaseDateRange%22%3A%7B%22end%22%3A%222024-12-31%22%2C%22start%22%3A%221980-01-01%22%7D%7D%2C%22runtimeConstraint%22%3A%7B%22runtimeRangeMinutes%22%3A%7B%22max%22%3A180%2C%22min%22%3A1%7D%7D%2C%22sortBy%22%3A%22USER_RATING%22%2C%22sortOrder%22%3A%22DESC%22%2C%22titleCreditsConstraint%22%3A%7B%22allCredits%22%3A%5B%7B%22nameId%22%3A%22nm0000233%22%7D%2C%7B%22nameId%22%3A%22nm0000168%22%7D%5D%2C%22excludeCredits%22%3A%5B%5D%7D%2C%22titleTypeConstraint%22%3A%7B%22anyTitleTypeIds%22%3A%5B%22movie%22%5D%2C%22excludeTitleTypeIds%22%3A%5B%5D%7D%2C%22userRatingsConstraint%22%3A%7B%22aggregateRatingRange%22%3A%7B%22max%22%3A9.9%2C%22min%22%3A5%7D%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%2260a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00%22%2C%22version%22%3A1%7D%7D')
 
-        movie_list = get_movies_from_page(search_url)
+        #movie_list = get_movies_from_page(search_url)
 
+        with_actors = 'https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables=%7B%22certificateConstraint%22%3A%7B%22anyRegionCertificateRatings%22%3A%5B%7B%22rating%22%3A%22R%22%2C%22region%22%3A%22US%22%7D%5D%2C%22excludeRegionCertificateRatings%22%3A%5B%5D%7D%2C%22first%22%3A50%2C%22genreConstraint%22%3A%7B%22allGenreIds%22%3A%5B%22Crime%22%2C%22Thriller%22%5D%2C%22excludeGenreIds%22%3A%5B%22Talk-Show%22%2C%22Reality-TV%22%2C%22News%22%2C%22Game-Show%22%2C%22Documentary%22%2C%22Short%22%5D%7D%2C%22locale%22%3A%22en-US%22%2C%22originCountryConstraint%22%3A%7B%22anyPrimaryCountries%22%3A%5B%22US%22%5D%7D%2C%22releaseDateConstraint%22%3A%7B%22releaseDateRange%22%3A%7B%22end%22%3A%222024-12-31%22%2C%22start%22%3A%221980-01-01%22%7D%7D%2C%22runtimeConstraint%22%3A%7B%22runtimeRangeMinutes%22%3A%7B%22max%22%3A180%2C%22min%22%3A1%7D%7D%2C%22sortBy%22%3A%22USER_RATING%22%2C%22sortOrder%22%3A%22DESC%22%2C%22titleCreditsConstraint%22%3A%7B%22allCredits%22%3A%5B%7B%22nameId%22%3A%22nm0000233%22%7D%2C%7B%22nameId%22%3A%22nm0000168%22%7D%5D%2C%22excludeCredits%22%3A%5B%5D%7D%2C%22titleTypeConstraint%22%3A%7B%22anyTitleTypeIds%22%3A%5B%22movie%22%5D%2C%22excludeTitleTypeIds%22%3A%5B%5D%7D%2C%22userRatingsConstraint%22%3A%7B%22aggregateRatingRange%22%3A%7B%22max%22%3A9.9%2C%22min%22%3A5%7D%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%2260a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00%22%2C%22version%22%3A1%7D%7D'
+        no_actors = 'https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables=%7B%22certificateConstraint%22%3A%7B%22anyRegionCertificateRatings%22%3A%5B%7B%22rating%22%3A%22R%22%2C%22region%22%3A%22US%22%7D%5D%2C%22excludeRegionCertificateRatings%22%3A%5B%5D%7D%2C%22first%22%3A50%2C%22genreConstraint%22%3A%7B%22allGenreIds%22%3A%5B%22Crime%22%2C%22Thriller%22%5D%2C%22excludeGenreIds%22%3A%5B%22Talk-Show%22%2C%22Reality-TV%22%2C%22News%22%2C%22Game-Show%22%2C%22Documentary%22%2C%22Short%22%5D%7D%2C%22locale%22%3A%22en-US%22%2C%22originCountryConstraint%22%3A%7B%22anyPrimaryCountries%22%3A%5B%22US%22%5D%7D%2C%22releaseDateConstraint%22%3A%7B%22releaseDateRange%22%3A%7B%22end%22%3A%222024-12-31%22%2C%22start%22%3A%221980-01-01%22%7D%7D%2C%22runtimeConstraint%22%3A%7B%22runtimeRangeMinutes%22%3A%7B%22max%22%3A180%2C%22min%22%3A1%7D%7D%2C%22sortBy%22%3A%22USER_RATING%22%2C%22sortOrder%22%3A%22DESC%22%2C%22titleTypeConstraint%22%3A%7B%22anyTitleTypeIds%22%3A%5B%22movie%22%5D%2C%22excludeTitleTypeIds%22%3A%5B%5D%7D%2C%22userRatingsConstraint%22%3A%7B%22aggregateRatingRange%22%3A%7B%22max%22%3A9.9%2C%22min%22%3A5%7D%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%2260a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00%22%2C%22version%22%3A1%7D%7D'
 
-        #return {'mine': search_url, 'site': unquote('https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables=%7B%22certificateConstraint%22%3A%7B%22anyRegionCertificateRatings%22%3A%5B%7B%22rating%22%3A%22R%22%2C%22region%22%3A%22US%22%7D%5D%2C%22excludeRegionCertificateRatings%22%3A%5B%5D%7D%2C%22first%22%3A50%2C%22genreConstraint%22%3A%7B%22allGenreIds%22%3A%5B%22Crime%22%2C%22Thriller%22%5D%2C%22excludeGenreIds%22%3A%5B%22Talk-Show%22%2C%22Reality-TV%22%2C%22News%22%2C%22Game-Show%22%2C%22Documentary%22%2C%22Short%22%5D%7D%2C%22locale%22%3A%22en-US%22%2C%22originCountryConstraint%22%3A%7B%22anyPrimaryCountries%22%3A%5B%22US%22%5D%7D%2C%22releaseDateConstraint%22%3A%7B%22releaseDateRange%22%3A%7B%22end%22%3A%222024-12-31%22%2C%22start%22%3A%221980-01-01%22%7D%7D%2C%22runtimeConstraint%22%3A%7B%22runtimeRangeMinutes%22%3A%7B%22max%22%3A180%2C%22min%22%3A1%7D%7D%2C%22sortBy%22%3A%22USER_RATING%22%2C%22sortOrder%22%3A%22DESC%22%2C%22titleCreditsConstraint%22%3A%7B%22allCredits%22%3A%5B%7B%22nameId%22%3A%22nm0000233%22%7D%2C%7B%22nameId%22%3A%22nm0000168%22%7D%5D%2C%22excludeCredits%22%3A%5B%5D%7D%2C%22titleTypeConstraint%22%3A%7B%22anyTitleTypeIds%22%3A%5B%22movie%22%5D%2C%22excludeTitleTypeIds%22%3A%5B%5D%7D%2C%22userRatingsConstraint%22%3A%7B%22aggregateRatingRange%22%3A%7B%22max%22%3A9.9%2C%22min%22%3A5%7D%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%2260a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00%22%2C%22version%22%3A1%7D%7D')}
-
-        return movie_list
+        mine_list = get_movies(search_url)
+        site_list_no = get_movies(no_actors)
+        site_list_yes = get_movies(with_actors)
+        #return {'mine': search_url, 'site': no_actors}
+        return {'mine': mine_list, 'site':site_list_yes}
+        #return movie_list
     except Exception as err:
-        return {'err': str(type(err))}
+        return {'err': str((err))}
 
 def testee(fff):
     
