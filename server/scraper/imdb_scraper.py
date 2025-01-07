@@ -26,6 +26,7 @@ def url_builder(var_data):
     url_variables['sortBy'] = var_data['sort']
     url_variables['sortOrder'] = var_data['order']
 
+    #Can be empty - And deleted
     if (var_data.get('parental', None)) != None:
         url_variables.update({
             'certificateConstraint':{
@@ -34,6 +35,7 @@ def url_builder(var_data):
             }
         })
 
+    #Can be empty and deleted
     if ((var_data.get('genres', None)) != None) or ((var_data.get('excluded', None)) != None):
         url_variables.update({
             'genreConstraint':{
@@ -42,6 +44,7 @@ def url_builder(var_data):
             }
         })
     
+    #Can be Empty - And deleted?
     if (var_data.get('country', None)) != None:
         url_variables.update({
             'originCountryConstraint':{
@@ -49,6 +52,7 @@ def url_builder(var_data):
             }
         })
     
+    #Can be Empty and deleted
     if (var_data.get('date', None)) != None:
         url_variables.update({
             'releaseDateConstraint':{
@@ -56,6 +60,7 @@ def url_builder(var_data):
             }
         })
 
+    #Can be Empty and Deleted
     if (var_data.get('runtime', None)) != None:
         url_variables.update({
             'runtimeConstraint':{
@@ -63,6 +68,7 @@ def url_builder(var_data):
             }
         })
 
+    #Can be Empty and Deleted
     if (var_data.get('rating', None)) != None:
         url_variables.update({
             'userRatingsConstraint':{
@@ -70,6 +76,7 @@ def url_builder(var_data):
             }
         })
 
+    #Can be empty and deleted
     if (var_data.get('type', None)) != None:
         url_variables.update({
             'titleTypeConstraint':{
@@ -78,6 +85,7 @@ def url_builder(var_data):
             }
         })
     
+    #Can't be empty nor deleted
     if (var_data.get('people', None)) != None:
         url_variables.update({
             'titleCreditsConstraint':{
