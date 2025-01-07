@@ -10,8 +10,8 @@ const sampleSelect = {
     country: 'US',
     date: {"end": "2024-12-31", "start": "1980-01-01"},
     runtime: {"max": 180, "min": 1},
-    actor: 'nm0000233',
-    director: 'nm0000168',
+    actor: 'samuel l jackson',
+    director: 'quentin tarantino',
     type: 'movie',
     rating: {"max": 9.9, "min": 5},
     parental: 'R'
