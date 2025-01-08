@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import './App.css'
 import FilterBlock from "./Components/FilterBlock.jsx"
 
+
 async function requestData(query, hook){
   let path = "/search"
 
@@ -20,6 +21,11 @@ async function requestData(query, hook){
   hook(returnedData)
 }
 
+/*async function requestData(query, hook){
+  let test = 'lol'
+  hook(test)
+}*/
+
 async function requestFilters() {
   const path = "/filters"
 
@@ -36,9 +42,11 @@ function App(){
   const [serverData, setServerData] = useState(null)
 
   const [selected, setSelected] = useState({})
+  const [response, setResponse] = useState({})
   
   useEffect(()=>{
     requestFilters().then((data)=>{
+      setResponse(data)
       setFilters(data.filters)
 
       const defaultOptions = {}
@@ -51,19 +59,20 @@ function App(){
 
   useEffect( () =>{
     console.log(serverData)
+    console.log(response)
     
   }, [serverData])
 
   return(
     <main id="main-content">
       <h1> Encuentra tu película </h1>
-
+      {/*
       <section>
         {Object.keys(filters).map((fil, k)=>(
           <FilterBlock filter={fil} filterOptions={filters[fil]} selected={selected[fil]} setOptions={setSelected}/>
         ))}
       </section>
-
+*/}
       <button onClick = {()=>requestData(selected, setServerData)} id="search-button">Buscar</button>
 
     </main>

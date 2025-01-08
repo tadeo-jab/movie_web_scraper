@@ -1,12 +1,57 @@
 {
     "filters":{
-        "release_date": ["1990-01-01", "2000-01-01", "2022-01-01"],
-        "genres": ["action", "comedy", "horror"],
-        "title_type": ["feature", "tv_series", "short"],
-        "user_rating": ["2.5", "9.8"],
-        "certificates": ["US:PG-13", "US:G", "US:NC-17"],
-        "country_of_origin": ["AR", "IN", "KR"],
-        "role": ["nm0000168","nm0000233"]
+        "genres":{
+            "options": [],
+            "type": "multi-select"
+        },
+        "awards":{
+            "options": ["ev0000003", "ev0000002"],
+            "type": "multi-select"
+        },
+        "date":{
+            "range": {"min": "1950-01-01", "max": "2024-12-31"},
+            "type": "range-select"
+        },
+        "rating":{
+            "range": {"min": 1.0, "max": 10.0},
+            "type": "range-select"
+        },
+        "runtime":{
+            "range": {"min": 1, "max": 200},
+            "type": "range-select"
+        },
+        "popularity":{
+            "range": {"min": 0, "max": 5000},
+            "type": "range-select"
+        },
+        "type":{
+            "options": ["Movie", "TV"],
+            "type": "single-select"
+        },
+        "parental":{
+            "options": ["R", "PG-13"],
+            "type": "single-select"
+        },
+        "company":{
+            "options": ["Disney", "Fox"],
+            "type": "single-select"
+        },
+        "animated":{
+            "options": [true, false],
+            "type": "bool-select"
+        },
+        "actor":{
+            "options": null,
+            "type": "credit-input"
+        },
+        "director":{
+            "options": null,
+            "type": "credit-input"
+        },
+        "country":{
+            "options": null,
+            "type": "country-input"
+        }
     },
     "url": {
         "base_url": "https://caching.graphql.imdb.com/",
@@ -40,5 +85,8 @@
             "Documentary",
             "Short"
         ]
+    },
+    "client_utils": {
+        "country_codes_url": "https://zonos.com/es/docs/guides/country-guides/country-iso-codes#lista-de-cdigos-iso-de-pases"
     }
 }
