@@ -17,9 +17,9 @@ const sampleSelect = {
     rating: {"max": 9.9, "min": 5},
     parental: 'R',
     animated: false,
-    popularity: {"max": 9.9, "min": 5},
-    awards: 'ev0000003',
-    company: 'Disney'
+    popularity: {"max": 5000, "min": 1},
+    awards: [{"eventId": 'ev0000292'}],
+    company: ['co0023400']
 }
 
 app.get("/filters", (req, res)=>{
