@@ -76,12 +76,14 @@ def url_builder(var_data):
         })
 
     #Can be Empty and Deleted
-    if (var_data.get('rating', None)) != None:
-        url_variables.update({
+    if ((var_data.get('rating', None)) != None) or ((var_data.get('popularity', None)) != None):
+        url_variables.update({ 
             'userRatingsConstraint':{
-                'aggregateRatingRange': var_data['rating']
-            }
-        })
+                **({'aggregateRatingRange': var_data['rating']} if ((var_data.get('rating', None)) != None) else {}),
+                **({'ratingsCountRange': var_data['popularity']} if ((var_data.get('popularity', None)) != None) else {}),
+            }})
+            
+        
 
     #Can be empty and deleted
     if (var_data.get('type', None)) != None:
@@ -99,19 +101,6 @@ def url_builder(var_data):
             'titleCreditsConstraint':{
                 'allCredits': var_data['credits'],
                 'excludeCredits': []
-            }
-        })
-
-    if (var_data.get('popularity', None)) != None:
-        url_variables.update({
-            'rankedTitleListConstraint':{
-                "allRankedTitleLists": [
-                    {
-                        "rankRange": var_data['popularity'],
-                        "rankedTitleListType": "TITLE_METER"
-                    }
-                ],
-                "excludeRankedTitleLists": []
             }
         })
 
@@ -237,8 +226,9 @@ def scrape_data_main(query):
         #company_url = 'https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables={"certificateConstraint"%3A{"anyRegionCertificateRatings"%3A[{"rating"%3A"R"%2C"region"%3A"US"}]%2C"excludeRegionCertificateRatings"%3A[]}%2C"creditedCompanyConstraint"%3A{"anyCompanyIds"%3A["co0023400"]%2C"excludeCompanyIds"%3A[]}%2C"first"%3A50%2C"genreConstraint"%3A{"allGenreIds"%3A["Crime"%2C"Thriller"]%2C"excludeGenreIds"%3A["Talk-Show"%2C"Reality-TV"%2C"News"%2C"Game-Show"%2C"Documentary"%2C"Short"]}%2C"locale"%3A"en-US"%2C"originCountryConstraint"%3A{"anyPrimaryCountries"%3A["US"]}%2C"releaseDateConstraint"%3A{"releaseDateRange"%3A{"end"%3A"2024-12-31"%2C"start"%3A"1980-01-01"}}%2C"runtimeConstraint"%3A{"runtimeRangeMinutes"%3A{"max"%3A180%2C"min"%3A1}}%2C"sortBy"%3A"USER_RATING"%2C"sortOrder"%3A"DESC"%2C"titleCreditsConstraint"%3A{"allCredits"%3A[{"nameId"%3A"nm0000233"}%2C{"nameId"%3A"nm0000168"}]}%2C"titleTypeConstraint"%3A{"anyTitleTypeIds"%3A["movie"]%2C"excludeTitleTypeIds"%3A[]}%2C"userRatingsConstraint"%3A{"aggregateRatingRange"%3A{"max"%3A9.9%2C"min"%3A5}}}&extensions={"persistedQuery"%3A{"sha256Hash"%3A"60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00"%2C"version"%3A1}}'
         #award_url = 'https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables={"awardConstraint"%3A{"allEventNominations"%3A[{"eventId"%3A"ev0000003"%2C"searchAwardCategoryId"%3A"bestDirector"%2C"winnerFilter"%3A"WINNER_ONLY"}%2C{"eventId"%3A"ev0000003"%2C"winnerFilter"%3A"WINNER_ONLY"}%2C{"eventId"%3A"ev0000003"%2C"searchAwardCategoryId"%3A"bestDirector"}%2C{"eventId"%3A"ev0000003"}]}%2C"certificateConstraint"%3A{"anyRegionCertificateRatings"%3A[{"rating"%3A"R"%2C"region"%3A"US"}]%2C"excludeRegionCertificateRatings"%3A[]}%2C"creditedCompanyConstraint"%3A{"anyCompanyIds"%3A["co0023400"]%2C"excludeCompanyIds"%3A[]}%2C"first"%3A50%2C"genreConstraint"%3A{"allGenreIds"%3A["Crime"%2C"Thriller"]%2C"excludeGenreIds"%3A["Talk-Show"%2C"Reality-TV"%2C"News"%2C"Game-Show"%2C"Documentary"%2C"Short"]}%2C"locale"%3A"en-US"%2C"originCountryConstraint"%3A{"anyPrimaryCountries"%3A["US"]}%2C"releaseDateConstraint"%3A{"releaseDateRange"%3A{"end"%3A"2024-12-31"%2C"start"%3A"1980-01-01"}}%2C"runtimeConstraint"%3A{"runtimeRangeMinutes"%3A{"max"%3A180%2C"min"%3A1}}%2C"sortBy"%3A"USER_RATING"%2C"sortOrder"%3A"DESC"%2C"titleCreditsConstraint"%3A{"allCredits"%3A[{"nameId"%3A"nm0000233"}%2C{"nameId"%3A"nm0000168"}]}%2C"titleTypeConstraint"%3A{"anyTitleTypeIds"%3A["movie"]%2C"excludeTitleTypeIds"%3A[]}%2C"userRatingsConstraint"%3A{"aggregateRatingRange"%3A{"max"%3A9.9%2C"min"%3A5}}}&extensions={"persistedQuery"%3A{"sha256Hash"%3A"60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00"%2C"version"%3A1}}'
         #award_url_2 = '[https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables={"awardConstraint"%3A{"allEventNominations"%3A[{"eventId"%3A"ev0000292"}]}%2C"certificateConstraint"%3A{"anyRegionCertificateRatings"%3A[{"rating"%3A"R"%2C"region"%3A"US"}]%2C"excludeRegionCertificateRatings"%3A[]}%2C"creditedCompanyConstraint"%3A{"anyCompanyIds"%3A["co0023400"]%2C"excludeCompanyIds"%3A[]}%2C"first"%3A50%2C"genreConstraint"%3A{"allGenreIds"%3A["Crime"%2C"Thriller"]%2C"excludeGenreIds"%3A["Talk-Show"%2C"Reality-TV"%2C"News"%2C"Game-Show"%2C"Documentary"%2C"Short"]}%2C"locale"%3A"en-US"%2C"originCountryConstraint"%3A{"anyPrimaryCountries"%3A["US"]}%2C"rankedTitleListConstraint"%3A{"allRankedTitleLists"%3A[{"rankRange"%3A{"max"%3A5000%2C"min"%3A1}%2C"rankedTitleListType"%3A"TITLE_METER"}%2C{"rankRange"%3A{"max"%3A1000}%2C"rankedTitleListType"%3A"TOP_RATED_MOVIES"}]%2C"excludeRankedTitleLists"%3A[]}%2C"releaseDateConstraint"%3A{"releaseDateRange"%3A{"end"%3A"2024-12-31"%2C"start"%3A"1980-01-01"}}%2C"runtimeConstraint"%3A{"runtimeRangeMinutes"%3A{"max"%3A180%2C"min"%3A1}}%2C"sortBy"%3A"USER_RATING"%2C"sortOrder"%3A"DESC"%2C"titleCreditsConstraint"%3A{"allCredits"%3A[{"nameId"%3A"nm0000233"}%2C{"nameId"%3A"nm0000168"}]}%2C"titleTypeConstraint"%3A{"anyTitleTypeIds"%3A["movie"]%2C"excludeTitleTypeIds"%3A[]}%2C"userRatingsConstraint"%3A{"aggregateRatingRange"%3A{"max"%3A9.9%2C"min"%3A5}}}&extensions={"persistedQuery"%3A{"sha256Hash"%3A"60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00"%2C"version"%3A1}}](https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables=%7B%22awardConstraint%22%3A%7B%22allEventNominations%22%3A%5B%7B%22eventId%22%3A%22ev0000292%22%7D%5D%7D%2C%22certificateConstraint%22%3A%7B%22anyRegionCertificateRatings%22%3A%5B%7B%22rating%22%3A%22R%22%2C%22region%22%3A%22US%22%7D%5D%2C%22excludeRegionCertificateRatings%22%3A%5B%5D%7D%2C%22creditedCompanyConstraint%22%3A%7B%22anyCompanyIds%22%3A%5B%22co0023400%22%5D%2C%22excludeCompanyIds%22%3A%5B%5D%7D%2C%22first%22%3A50%2C%22genreConstraint%22%3A%7B%22allGenreIds%22%3A%5B%22Crime%22%2C%22Thriller%22%5D%2C%22excludeGenreIds%22%3A%5B%22Talk-Show%22%2C%22Reality-TV%22%2C%22News%22%2C%22Game-Show%22%2C%22Documentary%22%2C%22Short%22%5D%7D%2C%22locale%22%3A%22en-US%22%2C%22originCountryConstraint%22%3A%7B%22anyPrimaryCountries%22%3A%5B%22US%22%5D%7D%2C%22rankedTitleListConstraint%22%3A%7B%22allRankedTitleLists%22%3A%5B%7B%22rankRange%22%3A%7B%22max%22%3A5000%2C%22min%22%3A1%7D%2C%22rankedTitleListType%22%3A%22TITLE_METER%22%7D%2C%7B%22rankRange%22%3A%7B%22max%22%3A1000%7D%2C%22rankedTitleListType%22%3A%22TOP_RATED_MOVIES%22%7D%5D%2C%22excludeRankedTitleLists%22%3A%5B%5D%7D%2C%22releaseDateConstraint%22%3A%7B%22releaseDateRange%22%3A%7B%22end%22%3A%222024-12-31%22%2C%22start%22%3A%221980-01-01%22%7D%7D%2C%22runtimeConstraint%22%3A%7B%22runtimeRangeMinutes%22%3A%7B%22max%22%3A180%2C%22min%22%3A1%7D%7D%2C%22sortBy%22%3A%22USER_RATING%22%2C%22sortOrder%22%3A%22DESC%22%2C%22titleCreditsConstraint%22%3A%7B%22allCredits%22%3A%5B%7B%22nameId%22%3A%22nm0000233%22%7D%2C%7B%22nameId%22%3A%22nm0000168%22%7D%5D%7D%2C%22titleTypeConstraint%22%3A%7B%22anyTitleTypeIds%22%3A%5B%22movie%22%5D%2C%22excludeTitleTypeIds%22%3A%5B%5D%7D%2C%22userRatingsConstraint%22%3A%7B%22aggregateRatingRange%22%3A%7B%22max%22%3A9.9%2C%22min%22%3A5%7D%7D%7D&extensions=%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%2260a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00%22%2C%22version%22%3A1%7D%7D)'
+        #rating_count_url = 'https://caching.graphql.imdb.com/?operationName=AdvancedTitleSearch&variables={"awardConstraint"%3A{"allEventNominations"%3A[{"eventId"%3A"ev0000292"}]}%2C"certificateConstraint"%3A{"anyRegionCertificateRatings"%3A[{"rating"%3A"R"%2C"region"%3A"US"}]%2C"excludeRegionCertificateRatings"%3A[]}%2C"creditedCompanyConstraint"%3A{"anyCompanyIds"%3A["co0023400"]%2C"excludeCompanyIds"%3A[]}%2C"first"%3A50%2C"genreConstraint"%3A{"allGenreIds"%3A["Crime"%2C"Thriller"]%2C"excludeGenreIds"%3A["Talk-Show"%2C"Reality-TV"%2C"News"%2C"Game-Show"%2C"Documentary"%2C"Short"]}%2C"locale"%3A"en-US"%2C"originCountryConstraint"%3A{"anyPrimaryCountries"%3A["US"]}%2C"rankedTitleListConstraint"%3A{"allRankedTitleLists"%3A[{"rankRange"%3A{"max"%3A5000%2C"min"%3A1}%2C"rankedTitleListType"%3A"TITLE_METER"}]%2C"excludeRankedTitleLists"%3A[]}%2C"releaseDateConstraint"%3A{"releaseDateRange"%3A{"end"%3A"2024-12-31"%2C"start"%3A"1980-01-01"}}%2C"runtimeConstraint"%3A{"runtimeRangeMinutes"%3A{"max"%3A180%2C"min"%3A1}}%2C"sortBy"%3A"USER_RATING"%2C"sortOrder"%3A"DESC"%2C"titleCreditsConstraint"%3A{"allCredits"%3A[{"nameId"%3A"nm0000233"}%2C{"nameId"%3A"nm0000168"}]}%2C"titleTypeConstraint"%3A{"anyTitleTypeIds"%3A["movie"]%2C"excludeTitleTypeIds"%3A[]}%2C"userRatingsConstraint"%3A{"aggregateRatingRange"%3A{"max"%3A9.9%2C"min"%3A5}%2C"ratingsCountRange"%3A{"max"%3A3000000%2C"min"%3A100000}}}&extensions={"persistedQuery"%3A{"sha256Hash"%3A"60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00"%2C"version"%3A1}}'
 
-        #super_url = url_test(award_url_2)
+        #super_url = url_test(rating_count_url)
         #return {'data': super_url}
 
         #return {'url': search_url}

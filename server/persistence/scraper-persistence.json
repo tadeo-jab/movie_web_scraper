@@ -17,15 +17,15 @@
             "type": "range-select"
         },
         "runtime":{
-            "range": {"min": 1, "max": 200},
+            "range": {"min": 1, "max": 250},
             "type": "range-select"
         },
         "popularity":{
-            "range": {"min": 0, "max": 5000},
+            "range": {"min": 1, "max": 5000},
             "type": "range-select"
         },
         "type":{
-            "options": ["Movie", "TV"],
+            "options": [{"Movie": "movie", "TV Series": "tvSeries", "Mini Series": "tvMiniSeries"}],
             "type": "single-select"
         },
         "parental":{

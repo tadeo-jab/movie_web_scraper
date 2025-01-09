@@ -17,7 +17,7 @@ const sampleSelect = {
     rating: {"max": 9.9, "min": 5},
     parental: 'R',
     animated: false,
-    popularity: {"max": 5000, "min": 1},
+    popularity: {"max": 3000000, "min": 100000},
     awards: [{"eventId": 'ev0000292'}],
     company: ['co0023400']
 }
