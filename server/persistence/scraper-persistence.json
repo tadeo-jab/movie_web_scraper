@@ -1,11 +1,45 @@
 {
     "filters":{
         "genres":{
-            "options": [],
+            "options": {
+                "Action": "Action",
+                "Adventure": "Adventure",
+                "Biography": "Biography",
+                "Comedy": "Comedy",
+                "Crime": "Crime",
+                "Drama": "Drama",
+                "Family": "Family",
+                "Fantasy": "Fantasy",
+                "Film Noir": "Film-Noir",
+                "History": "History",
+                "Horror": "Horror",
+                "Music": "Music",
+                "Musical": "Musical",
+                "Mystery": "Mystery",
+                "Romance": "Romance",
+                "Science Fiction": "Sci-Fi",
+                "Sports": "Sport",
+                "Thriller": "Thriller",
+                "War": "War",
+                "Western": "Western"
+            },
             "type": "multi-select"
         },
         "awards":{
-            "options": ["ev0000003", "ev0000002"],
+            "options": {
+                "Oscar - Nominated": {"eventId": "ev0000003"},
+                "Oscar - Winner": {"eventId": "ev0000003", "winnerFilter": "WINNER_ONLY"},
+                "Golden Globe - Nominated": {"eventId": "ev0000292"},
+                "Golden Globe - Winner": {"eventId": "ev0000292", "winnerFilter": "WINNER_ONLY"},
+                "Emmy Award - Nominated": {"eventId": "ev0000223"},
+                "Emmy Award - Winner": {"eventId": "ev0000223", "winnerFilter": "WINNER_ONLY"},
+                "Razzie - Nominated": {"eventId": "0000558"},
+                "Razzie - Winner": {"eventId": "0000558", "winnerFilter": "WINNER_ONLY"},
+                "Best Director - Nominated": {"eventId": "ev0000003", "searchAwardCategoryId": "bestDirector"},
+                "Best Director - Winner": {"eventId": "ev0000003", "searchAwardCategoryId": "bestDirector" ,"winnerFilter": "WINNER_ONLY"},
+                "Best Picture - Nominated": {"eventId": "ev0000003", "searchAwardCategoryId": "bestPicture"},
+                "Best Picture - Winner": {"eventId": "ev0000003", "searchAwardCategoryId": "bestPicture" ,"winnerFilter": "WINNER_ONLY"}
+            },
             "type": "multi-select"
         },
         "date":{
@@ -21,23 +55,45 @@
             "type": "range-select"
         },
         "popularity":{
-            "range": {"min": 1, "max": 5000},
+            "range": {"min": 1, "max": 3500000},
             "type": "range-select"
         },
         "type":{
-            "options": [{"Movie": "movie", "TV Series": "tvSeries", "Mini Series": "tvMiniSeries"}],
+            "options": {
+                "Movie": "movie", 
+                "TV Series": "tvSeries", 
+                "Mini Series": "tvMiniSeries"
+            },
             "type": "single-select"
         },
         "parental":{
-            "options": ["R", "PG-13"],
+            "options": {
+                "G":"G",
+                "PG":"PG",
+                "PG-13":"PG-13",
+                "R":"R",
+                "NC-17":"NC-17"
+            },
             "type": "single-select"
         },
         "company":{
-            "options": ["Disney", "Fox"],
+            "options": {
+                "20th Century Fox": ["co0000756","co0176225","co0201557","co0017497"],
+                "DreamWorks": ["co0067641","co0040938","co0252576","co0003158"],
+                "MGM": ["co0007143","co0026841"],
+                "Paramount": ["co0023400"],
+                "Sony": ["co0050868","co0026545","co0121181"],
+                "Universal": ["co0005073","co0055277","co0042399"],
+                "Walt Disney": ["co0008970","co0017902","co0098836","co0059516","co0092035","co0049348"],
+                "Warner Bros.": ["co0002663","co0005035","co0863266","co0072876","co0080422","co0046718"]
+            },
             "type": "single-select"
         },
         "animated":{
-            "options": [true, false],
+            "options": {
+                "Yes": true,
+                "No": false
+            },
             "type": "bool-select"
         },
         "actor":{
