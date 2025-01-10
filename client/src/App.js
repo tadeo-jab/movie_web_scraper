@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react"
 import './App.css'
 import FilterBlock from "./Components/FilterBlock.jsx"
+import SelectedBar from "./Components/SelectedBar.jsx"
 
 
 async function requestData(query, hook){
@@ -36,7 +37,7 @@ function App(){
   const [filters, setFilters] = useState([])
   const [serverData, setServerData] = useState(null)
 
-  const [selected, setSelected] = useState([])
+  const [selected, setSelected] = useState({display:{}, request:{}})
   const [response, setResponse] = useState({})
   
   useEffect(()=>{
@@ -53,8 +54,15 @@ function App(){
     
   }, [serverData])
 
+  useEffect( () =>{
+    console.log(selected.display)
+    console.log(selected.request)
+    
+  }, [selected])
+
   return(
     <main id="main-content">
+      <SelectedBar selected={selected} setSelected={setSelected}/> 
       <h1> Encuentra tu película </h1>
       {
       <section>
