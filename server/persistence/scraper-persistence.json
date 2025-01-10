@@ -1,6 +1,8 @@
 {
-    "filters":{
-        "genres":{
+    "filters":[
+        {
+            "filter-id": "genres",
+            "display-name": "Genres",
             "options": {
                 "Action": "Action",
                 "Adventure": "Adventure",
@@ -25,7 +27,9 @@
             },
             "type": "multi-select"
         },
-        "awards":{
+        {
+            "filter-id": "awards",
+            "display-name": "Awards",
             "options": {
                 "Oscar - Nominated": {"eventId": "ev0000003"},
                 "Oscar - Winner": {"eventId": "ev0000003", "winnerFilter": "WINNER_ONLY"},
@@ -42,23 +46,33 @@
             },
             "type": "multi-select"
         },
-        "date":{
-            "range": {"min": "1950-01-01", "max": "2024-12-31"},
+        {
+            "filter-id": "date",
+            "display-name": "Release Date",
+            "options": {"min": "1950-01-01", "max": "2024-12-31"},
             "type": "range-select"
         },
-        "rating":{
-            "range": {"min": 1.0, "max": 10.0},
+        {
+            "filter-id": "rating",
+            "display-name": "IMDb Rating:",
+            "options": {"min": 1.0, "max": 10.0},
             "type": "range-select"
         },
-        "runtime":{
-            "range": {"min": 1, "max": 250},
+        {
+            "filter-id": "runtime",
+            "display-name": "Runtime:",
+            "options": {"min": 1, "max": 250},
             "type": "range-select"
         },
-        "popularity":{
-            "range": {"min": 1, "max": 3500000},
+        {
+            "filter-id": "popularity",
+            "display-name": "Popularity:",
+            "options": {"min": 1, "max": 3500000},
             "type": "range-select"
         },
-        "type":{
+        {
+            "filter-id": "type",
+            "display-name": "Title Type:",
             "options": {
                 "Movie": "movie", 
                 "TV Series": "tvSeries", 
@@ -66,7 +80,9 @@
             },
             "type": "single-select"
         },
-        "parental":{
+        {
+            "filter-id": "parental",
+            "display-name": "Parental Rating",
             "options": {
                 "G":"G",
                 "PG":"PG",
@@ -76,7 +92,9 @@
             },
             "type": "single-select"
         },
-        "company":{
+        {
+            "filter-id": "company",
+            "display-name": "Company",
             "options": {
                 "20th Century Fox": ["co0000756","co0176225","co0201557","co0017497"],
                 "DreamWorks": ["co0067641","co0040938","co0252576","co0003158"],
@@ -89,26 +107,34 @@
             },
             "type": "single-select"
         },
-        "animated":{
+        {
+            "filter-id": "animated",
+            "display-name": "Is Animated",
             "options": {
                 "Yes": true,
                 "No": false
             },
-            "type": "bool-select"
+            "type": "single-select"
         },
-        "actor":{
+        {
+            "filter-id": "actor",
+            "display-name": "Actor",
             "options": null,
             "type": "credit-input"
         },
-        "director":{
+        {
+            "filter-id": "director",
+            "display-name": "Director:",
             "options": null,
             "type": "credit-input"
         },
-        "country":{
-            "options": null,
+        {
+            "filter-id": "country",
+            "display-name": "Country of Origin",
+            "options": {},
             "type": "country-input"
         }
-    },
+    ],
     "url": {
         "base_url": "https://caching.graphql.imdb.com/",
         "operation_name" : "AdvancedTitleSearch",

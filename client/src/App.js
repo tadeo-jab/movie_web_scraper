@@ -21,11 +21,6 @@ async function requestData(query, hook){
   hook(returnedData)
 }
 
-/*async function requestData(query, hook){
-  let test = 'lol'
-  hook(test)
-}*/
-
 async function requestFilters() {
   const path = "/filters"
 
@@ -38,41 +33,36 @@ async function requestFilters() {
 
 
 function App(){
-  const [filters, setFilters] = useState({})
+  const [filters, setFilters] = useState([])
   const [serverData, setServerData] = useState(null)
 
-  const [selected, setSelected] = useState({})
+  const [selected, setSelected] = useState([])
   const [response, setResponse] = useState({})
   
   useEffect(()=>{
     requestFilters().then((data)=>{
       setResponse(data)
-      setFilters(data.filters)
-
-      const defaultOptions = {}
-      for (let [fil, val] of Object.entries(data.filters)) {
-        defaultOptions[fil] = val[0]
-      }
-      setSelected(defaultOptions)
+      setFilters(data)
     })
   }, [])
 
   useEffect( () =>{
     console.log(serverData)
     console.log(response)
+    console.log(filters)
     
   }, [serverData])
 
   return(
     <main id="main-content">
       <h1> Encuentra tu película </h1>
-      {/*
+      {
       <section>
-        {Object.keys(filters).map((fil, k)=>(
-          <FilterBlock filter={fil} filterOptions={filters[fil]} selected={selected[fil]} setOptions={setSelected}/>
+        {filters.map((fil, k)=>(
+          <FilterBlock key={k} filterData={fil} setSelected={setSelected}/>
         ))}
       </section>
-*/}
+}
       <button onClick = {()=>requestData(selected, setServerData)} id="search-button">Buscar</button>
 
     </main>

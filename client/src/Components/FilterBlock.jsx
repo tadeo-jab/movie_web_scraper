@@ -1,20 +1,22 @@
 import React from "react";
 
-export default function FilterBlock({filter, filterOptions, selected, setOptions}){
+export default function FilterBlock({filterData, setSelected}){
 
     function updateHandler(option){
-        setOptions((prevState)=>({...prevState, [filter]: option}))
+        setSelected((prevState)=>({...prevState, [filterData]: option}))
     }
 
     return(
         <article>
-            <div>{filter}</div>
-            <div><button>{selected}</button></div>
+            <div>{filterData['display-name']}</div>
+            {
             <div>
-                {filterOptions.map((o)=>(
-                    <button onClick={()=> updateHandler(o)}>{o}</button>
-                ))}
+                {filterData.options != null ?(
+                    Object.keys(filterData.options).map((o, k)=>(
+                    <button onClick={()=> updateHandler(o)} key={k}>{o}</button>
+                ))) : null}
             </div>
+            }
         </article>
     )
 }
