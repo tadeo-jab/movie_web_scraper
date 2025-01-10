@@ -194,6 +194,8 @@ def scrape_data_main(query):
         'excluded': search_data['excluded_genres']
     })
 
+    #Must fix:
+
     if new_query.get('animated', None) != None:
         del url_filters['animated']
         if (new_query['animated']) and (new_query.get('genres', None) != None):

@@ -10,6 +10,7 @@ async function requestData(query, hook){
   const queryParams = query
   const searchParams = new URLSearchParams(queryParams)
   path += `?${searchParams}`
+  console.log(path)
 
   const incomingData = await fetch(path, {
     method: "GET"
@@ -71,7 +72,7 @@ function App(){
         ))}
       </section>
 }
-      <button onClick = {()=>requestData(selected, setServerData)} id="search-button">Buscar</button>
+      <button onClick = {()=>requestData(selected.request, setServerData)} id="search-button">Buscar</button>
 
     </main>
   )

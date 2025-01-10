@@ -58,10 +58,10 @@ app.get("/filters", (req, res)=>{
 
 app.get('/search', (req, res) => {
 
-    res.status(200).json({'xd':"lol"})
-    /*
+    //res.status(200).json({'xd':req.query})
+    
     //JSON.stringify(req.query)
-    const pythonProcess = spawn('python', [movieScraperPath, JSON.stringify(sampleSelect), JSON.stringify(scraperPersistence)]);
+    const pythonProcess = spawn('python', [movieScraperPath, JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
 
     let dataBuffer = '';
 
@@ -87,7 +87,7 @@ app.get('/search', (req, res) => {
             res.status(500).json({ error: 'Python script failed to execute', data: dataBuffer });
         }
         
-    });*/
+    });
 });
 
 app.listen(5000, () => {console.log("Server started on port 5000")})
