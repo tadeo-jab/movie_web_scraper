@@ -43,7 +43,7 @@ app.get("/filters", (req, res)=>{
         if (code === 0) {
         try {
             const countryData = JSON.parse(countryBuffer);
-            const countryIndex =  filters.findIndex(fil => fil["filter-id"] === "country")
+            const countryIndex =  filters.findIndex(fil => fil.filterId === "country")
             filters[countryIndex].options = countryData.data
             res.status(200).json(filters);
         } catch (err) {

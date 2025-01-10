@@ -1,14 +1,14 @@
 {
     "filters":[
         {
-            "filter-id": "genres",
-            "display-name": "Genres",
+            "filterId": "genres",
+            "displayText": "Genres",
             "options": {
                 "Action": "Action",
                 "Adventure": "Adventure",
                 "Biography": "Biography",
                 "Comedy": "Comedy",
-                "Crime": ["Crime"],
+                "Crime": "Crime",
                 "Drama": "Drama",
                 "Family": "Family",
                 "Fantasy": "Fantasy",
@@ -28,14 +28,14 @@
             "type": "multi-select"
         },
         {
-            "filter-id": "awards",
-            "display-name": "Awards",
+            "filterId": "awards",
+            "displayText": "Awards",
             "options": {
                 "Oscar - Nominated": {"eventId": "ev0000003"},
                 "Oscar - Winner": {"eventId": "ev0000003", "winnerFilter": "WINNER_ONLY"},
                 "Golden Globe - Nominated": {"eventId": "ev0000292"},
                 "Golden Globe - Winner": {"eventId": "ev0000292", "winnerFilter": "WINNER_ONLY"},
-                "Emmy Award - Nominated": [{"eventId": "ev0000223"}],
+                "Emmy Award - Nominated": {"eventId": "ev0000223"},
                 "Emmy Award - Winner": {"eventId": "ev0000223", "winnerFilter": "WINNER_ONLY"},
                 "Razzie - Nominated": {"eventId": "0000558"},
                 "Razzie - Winner": {"eventId": "0000558", "winnerFilter": "WINNER_ONLY"},
@@ -47,32 +47,32 @@
             "type": "multi-select"
         },
         {
-            "filter-id": "date",
-            "display-name": "Release Date",
+            "filterId": "date",
+            "displayText": "Release Date",
             "options": {"min": "1950-01-01", "max": "2024-12-31"},
             "type": "range-select"
         },
         {
-            "filter-id": "rating",
-            "display-name": "IMDb Rating:",
+            "filterId": "rating",
+            "displayText": "IMDb Rating:",
             "options": {"min": 1.0, "max": 10.0},
             "type": "range-select"
         },
         {
-            "filter-id": "runtime",
-            "display-name": "Runtime:",
+            "filterId": "runtime",
+            "displayText": "Runtime:",
             "options": {"min": 1, "max": 250},
             "type": "range-select"
         },
         {
-            "filter-id": "popularity",
-            "display-name": "Popularity:",
+            "filterId": "popularity",
+            "displayText": "Popularity:",
             "options": {"min": 1, "max": 3500000},
             "type": "range-select"
         },
         {
-            "filter-id": "type",
-            "display-name": "Title Type:",
+            "filterId": "type",
+            "displayText": "Title Type:",
             "options": {
                 "Movie": "movie", 
                 "TV Series": "tvSeries", 
@@ -81,8 +81,8 @@
             "type": "single-select"
         },
         {
-            "filter-id": "parental",
-            "display-name": "Parental Rating",
+            "filterId": "parental",
+            "displayText": "Parental Rating",
             "options": {
                 "G":"G",
                 "PG":"PG",
@@ -93,8 +93,8 @@
             "type": "single-select"
         },
         {
-            "filter-id": "company",
-            "display-name": "Company",
+            "filterId": "company",
+            "displayText": "Company",
             "options": {
                 "20th Century Fox": ["co0000756","co0176225","co0201557","co0017497"],
                 "DreamWorks": ["co0067641","co0040938","co0252576","co0003158"],
@@ -108,8 +108,8 @@
             "type": "single-select"
         },
         {
-            "filter-id": "animated",
-            "display-name": "Is Animated",
+            "filterId": "animated",
+            "displayText": "Is Animated",
             "options": {
                 "Yes": true,
                 "No": false
@@ -117,20 +117,20 @@
             "type": "single-select"
         },
         {
-            "filter-id": "actor",
-            "display-name": "Actor",
+            "filterId": "actor",
+            "displayText": "Actor",
             "options": null,
             "type": "credit-input"
         },
         {
-            "filter-id": "director",
-            "display-name": "Director:",
+            "filterId": "director",
+            "displayText": "Director:",
             "options": null,
             "type": "credit-input"
         },
         {
-            "filter-id": "country",
-            "display-name": "Country of Origin",
+            "filterId": "country",
+            "displayText": "Country of Origin",
             "options": {},
             "type": "country-input"
         }
