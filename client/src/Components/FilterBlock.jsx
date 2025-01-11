@@ -5,7 +5,7 @@ import RangeSliderFilter from "./Filters/RangeSliderFilter.jsx";
 import CreditInputFilter from "./Filters/CreditInputFilter.jsx";
 import CountryInputFilter from "./Filters/CountryInputFilter.jsx";
 
-export default function FilterBlock({filterData, setSelected}){
+export default function FilterBlock({filterData, selected, setSelected }){
 
     function updateHandler(option){
         setSelected((prevState)=>({
@@ -17,15 +17,15 @@ export default function FilterBlock({filterData, setSelected}){
     function renderComponent(typeId){
         switch(typeId){
             case 'multi-select':
-                return <MultiSelectFilter filterData={filterData} setSelected={setSelected}/>
+                return <MultiSelectFilter filterData={filterData} selected={selected} setSelected={setSelected}/>
             case 'single-select':
-                return <SingleSelectFilter filterData={filterData} setSelected={setSelected}/>
+                return <SingleSelectFilter filterData={filterData} selected={selected} setSelected={setSelected}/>
             case 'range-select':
-                return <RangeSliderFilter filterData={filterData} setSelected={setSelected}/>
+                return <RangeSliderFilter filterData={filterData} selected={selected} setSelected={setSelected}/>
             case 'credit-input':
-                return <CreditInputFilter filterData={filterData} setSelected={setSelected}/>
+                return <CreditInputFilter filterData={filterData} selected={selected} setSelected={setSelected}/>
             case 'country-input':
-                return <CountryInputFilter filterData={filterData} setSelected={setSelected}/>
+                return <CountryInputFilter filterData={filterData} selected={selected} setSelected={setSelected}/>
             default:
                 return <p>Error?</p>
         }

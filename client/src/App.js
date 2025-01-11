@@ -67,8 +67,8 @@ function App(){
       <h1> Encuentra tu película </h1>
       {
       <section>
-        {filters.map((fil, k)=>(
-          <FilterBlock key={k} filterData={fil} setSelected={setSelected}/>
+        {filters.map((fil)=>(
+          <FilterBlock filterData={fil} selected={selected} setSelected={setSelected}/>
         ))}
       </section>
 }

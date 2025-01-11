@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function CreditInputFilter({filterData, setSelected}){
+export default function CreditInputFilter({filterData, selected, setSelected}){
 
     function updateHandler(option){
         setSelected((prevState)=>({
@@ -14,8 +14,8 @@ export default function CreditInputFilter({filterData, setSelected}){
             {
             <div>
                 {filterData.options != null ?(
-                    Object.keys(filterData.options).map((o, k)=>(
-                    <button onClick={()=> updateHandler(o)} key={k}>{o}</button>
+                    Object.keys(filterData.options).map((o)=>(
+                    <button onClick={()=> updateHandler(o)}>{o}</button>
                 ))) : null}
             </div>
             }
