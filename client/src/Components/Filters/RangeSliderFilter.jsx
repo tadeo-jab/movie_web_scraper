@@ -29,6 +29,16 @@ export default function RangeSliderFilter({filterData, selected, setSelected}){
             displayValues = {min: minRef.current, max: maxRef.current }
             requestValues = {min: `${minRef.current}-01-01`, max: `${maxRef.current}-12-31` }
         }
+        else if(filOptions.modifier === 'plus'){
+            if(maxRef.current === filOptions.max){
+                displayValues = {min: minRef.current, max: `${maxRef.current}+`  }
+                requestValues = {min: minRef.current, max: filOptions.plus}
+            }
+            else{
+                displayValues = {min: minRef.current, max: maxRef.current }
+                requestValues = {min: minRef.current, max: maxRef.current }
+            }
+        }
 
         setSelected((prevState)=>({
             display: {...prevState.display, [filName]: `${displayValues.min} to ${displayValues.max}`},
