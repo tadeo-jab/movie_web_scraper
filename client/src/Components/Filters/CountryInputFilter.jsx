@@ -42,7 +42,7 @@ export default function CountryInputFilter({filterData, selected, setSelected}){
         <article>
             <input ref={inputRef} type="text" maxLength="100" placeholder="Choose a country" onChange={()=>{setRef(inputRef.current.value)}}/>
             <button onClick={()=>clearInput()}>X</button>
-            {(inputRef.current.value !== '') ? (
+            {(inputRef.current?.value !== '') ? (
                 <ul>
                     {Object.keys(filOptions).sort().filter(orderSuggestions).map((country)=>(
                         <li onClick={()=>selectFromDropdown(country)}>{country}</li>
