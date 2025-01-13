@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactSlider from "react-slider"
 import MultiRangeSlider from "multi-range-slider-react"
 import '../../Styles/RangeSliderFilter.css'
 
@@ -21,23 +20,17 @@ export default function RangeSliderFilter({filterData, selected, setSelected}){
         let displayValues = {} 
         let requestValues = {} 
 
-        if(filOptions.modifier === null){
+        if((filOptions.modifier === null) || ((filOptions.modifier === 'plus') && (maxRef.current !== filOptions.max))){
             displayValues = {min: minRef.current, max: maxRef.current }
             requestValues = {min: minRef.current, max: maxRef.current }
         }
+        else if((filOptions.modifier === 'plus') && (maxRef.current === filOptions.max)){
+            displayValues = {min: minRef.current, max: `${maxRef.current}+`  }
+            requestValues = {min: minRef.current, max: filOptions.plus}
+        }
         else if(filOptions.modifier === 'date'){
             displayValues = {min: minRef.current, max: maxRef.current }
-            requestValues = {min: `${minRef.current}-01-01`, max: `${maxRef.current}-12-31` }
-        }
-        else if(filOptions.modifier === 'plus'){
-            if(maxRef.current === filOptions.max){
-                displayValues = {min: minRef.current, max: `${maxRef.current}+`  }
-                requestValues = {min: minRef.current, max: filOptions.plus}
-            }
-            else{
-                displayValues = {min: minRef.current, max: maxRef.current }
-                requestValues = {min: minRef.current, max: maxRef.current }
-            }
+            requestValues = {start: `${minRef.current}-01-01`, end: `${maxRef.current}-12-31` }
         }
 
         setSelected((prevState)=>({

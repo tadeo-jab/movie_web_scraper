@@ -2,13 +2,14 @@ import React, {useEffect, useState} from "react"
 import './App.css'
 import FilterBlock from "./Components/FilterBlock.jsx"
 import SelectedBar from "./Components/SelectedBar.jsx"
+const qs = require('qs')
 
 
 async function requestData(query, hook){
   let path = "/search"
 
   const queryParams = query
-  const searchParams = new URLSearchParams(queryParams)
+  const searchParams = qs.stringify(queryParams)
   path += `?${searchParams}`
   console.log(path)
 
@@ -39,19 +40,15 @@ function App(){
   const [serverData, setServerData] = useState(null)
 
   const [selected, setSelected] = useState({display:{}, request:{}})
-  const [response, setResponse] = useState({})
   
   useEffect(()=>{
     requestFilters().then((data)=>{
-      setResponse(data)
       setFilters(data)
     })
   }, [])
 
   useEffect( () =>{
     console.log(serverData)
-    console.log(response)
-    console.log(filters)
     
   }, [serverData])
 
