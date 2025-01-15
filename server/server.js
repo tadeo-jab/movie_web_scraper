@@ -1,6 +1,7 @@
 const express = require("express")
 const { spawn } = require('child_process');
 const scraperPersistence = require('./persistence/scraper-persistence.json');
+const qs = require('qs')
 
 const app = express()
 const movieScraperPath = 'scraper/imdb_scraper.py'
@@ -21,6 +22,23 @@ const sampleSelect = {
     awards: [{"eventId": 'ev0000292'}],
     company: ['co0023400']
 }
+
+app.set('query parser', (queryString) => {
+    return qs.parse(queryString, {
+        decoder: (value) => {
+        if (!isNaN(value)) {
+            return Number(value);
+        }
+        if (value === 'true') {
+            return true;
+        }
+        if (value === 'false') {
+            return false;
+        }
+        return value;
+        },
+    });
+});
 
 app.get("/filters", (req, res)=>{
     const filters = scraperPersistence.filters
@@ -58,10 +76,10 @@ app.get("/filters", (req, res)=>{
 
 app.get('/search', (req, res) => {
 
-    res.status(200).json({'xd':req.query})
+    //res.status(200).json({'xd':req.query})
     
     //JSON.stringify(req.query)
-    /*
+    
     const pythonProcess = spawn('python', [movieScraperPath, JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
 
     let dataBuffer = '';
@@ -88,7 +106,8 @@ app.get('/search', (req, res) => {
             res.status(500).json({ error: 'Python script failed to execute', data: dataBuffer });
         }
         
-    });*/
+    });
+    
 });
 
 app.listen(5000, () => {console.log("Server started on port 5000")})

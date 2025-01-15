@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import sys
+import re
 
 def country_scraper_main(url):
     res = requests.get(url)
@@ -15,7 +16,10 @@ def country_scraper_main(url):
 
     for country in table_countries:
         row = country.find_all('td')
-        country_codes.update({row[0].text : row[1].text})
+        c_name = row[0].text if (',' not in row[0].text) else (re.split(',', row[0].text)[0])
+        c_code = row[1].text
+
+        country_codes.update({c_name : c_code})
     
     return country_codes
 

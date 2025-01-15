@@ -152,21 +152,26 @@
         }
     },
     "search_utils": {
-        "count": 50,
+        "count": 100,
         "headers": {
             "Content-type":"application/json", 
             "Accept":"application/json"
         },
         "sort_options": ["POPULARITY", "TITLE_REGIONAL", "USER_RATING", "USER_RATING_COUNT", "BOX_OFFICE_GROSS_DOMESTIC", "RUNTIME", "YEAR", "RELEASE_DATE"],
         "order_options": ["ASC", "DESC"],
-        "excluded_genres": [
-            "Talk-Show",
-            "Reality-TV",
-            "News",
-            "Game-Show",
-            "Documentary",
-            "Short"
-        ]
+        "selection_limit": 7,
+        "defaults": {
+            "excluded": [
+                "Talk-Show",
+                "Reality-TV",
+                "News",
+                "Game-Show",
+                "Documentary",
+                "Short"
+            ],
+            "popularity": {"min":50000, "max":3500000}
+        }
+        
     },
     "client_utils": {
         "country_codes_url": "https://zonos.com/es/docs/guides/country-guides/country-iso-codes#lista-de-cdigos-iso-de-pases"

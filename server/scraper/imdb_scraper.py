@@ -5,17 +5,14 @@ import json
 import sys
 import re
 import math
-from random import choice as random_choice
+from random import choice as random_choice, sample as random_sample
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse, unquote, quote
 
 
 def get_credits(name):
-    testurl_1 = unquote('https://caching.graphql.imdb.com/?operationName=FindPageSearch&variables={"after"%3A"eyJlc1Rva2VuIjpbIjg2OTAuNDk0Iiwibm0wNTUzMDQ3Il0sImZpbHRlciI6IntcImluY2x1ZGVBZHVsdFwiOmZhbHNlLFwiaXNFeGFjdE1hdGNoXCI6ZmFsc2UsXCJzZWFyY2hUZXJtXCI6XCJtYXJ0aW4gc2NvXCIsXCJ0eXBlXCI6W1wiTkFNRVwiXX0ifQ%3D%3D"%2C"includeAdult"%3Afalse%2C"isExactMatch"%3Afalse%2C"locale"%3A"es-MX"%2C"numResults"%3A25%2C"searchTerm"%3A"martin sco"%2C"skipHasExact"%3Atrue%2C"typeFilter"%3A"NAME"}&extensions={"persistedQuery"%3A{"sha256Hash"%3A"038ff5315025edc006d874aa81178b17335fcae8fecc25bf7c2ce3f1b8085b60"%2C"version"%3A1}}')
-    testurl_2 = 'https://caching.graphql.imdb.com/?operationName=FindPageSearch&variables={"after":"eyJlc1Rva2VuIjpbIjg2OTAuNDk0Iiwibm0wNTUzMDQ3Il0sImZpbHRlciI6IntcImluY2x1ZGVBZHVsdFwiOmZhbHNlLFwiaXNFeGFjdE1hdGNoXCI6ZmFsc2UsXCJzZWFyY2hUZXJtXCI6XCJtYXJ0aW4gc2NvXCIsXCJ0eXBlXCI6W1wiTkFNRVwiXX0ifQ==","includeAdult":false,"isExactMatch":false,"locale":"es-MX","numResults":25,"searchTerm":"martin sco","skipHasExact":true,"typeFilter":"NAME"}&extensions={"persistedQuery":{"sha256Hash":"038ff5315025edc006d874aa81178b17335fcae8fecc25bf7c2ce3f1b8085b60","version":1}}'
-    testurl_3 = f'https://caching.graphql.imdb.com/?operationName=FindPageSearch&variables={{"first":1,"includeAdult":false,"isExactMatch":false,"locale":"en-US","numResults":1,"searchTerm":"{name}","skipHasExact":true,"typeFilter":"NAME"}}&extensions={{"persistedQuery":{{"sha256Hash":"038ff5315025edc006d874aa81178b17335fcae8fecc25bf7c2ce3f1b8085b60","version":1}}}}'
+    credit_url = f'https://caching.graphql.imdb.com/?operationName=FindPageSearch&variables={{"first":1,"includeAdult":false,"isExactMatch":false,"locale":"en-US","numResults":1,"searchTerm":"{name}","skipHasExact":true,"typeFilter":"NAME"}}&extensions={{"persistedQuery":{{"sha256Hash":"038ff5315025edc006d874aa81178b17335fcae8fecc25bf7c2ce3f1b8085b60","version":1}}}}'
 
-
-    res = requests.get(testurl_3, headers=search_data['headers'])
+    res = requests.get(credit_url, headers=search_data['headers'])
     search_result = res.json()['data']['results']['edges']
 
     if search_result:
@@ -71,7 +68,7 @@ def url_builder(var_data):
     if (var_data.get('runtime', None)) != None:
         url_variables.update({
             'runtimeConstraint':{
-                'runtimeRangeMinutes': var_data['runtime']
+                'runtimeRangeMinutes': {'min': var_data['runtime']['min'], 'max': var_data['runtime']['max']}
             }
         })
 
@@ -79,8 +76,8 @@ def url_builder(var_data):
     if ((var_data.get('rating', None)) != None) or ((var_data.get('popularity', None)) != None):
         url_variables.update({ 
             'userRatingsConstraint':{
-                **({'aggregateRatingRange': var_data['rating']} if ((var_data.get('rating', None)) != None) else {}),
-                **({'ratingsCountRange': var_data['popularity']} if ((var_data.get('popularity', None)) != None) else {}),
+                **({'aggregateRatingRange': {'min': var_data['rating']['min'], 'max': var_data['rating']['max']}} if ((var_data.get('rating', None)) != None) else {}),
+                **({'ratingsCountRange': {'min': var_data['popularity']['min'], 'max': var_data['popularity']['max']}} if ((var_data.get('popularity', None)) != None) else {}),
             }})
             
         
@@ -142,7 +139,7 @@ def get_movies(url):
     res = requests.get(url, headers=search_data['headers'])
 
     page_data = res.json()["data"]["advancedTitleSearch"]
-    movies_payload = {'movies':[]}
+    movies_payload = []
 
     for m in page_data['edges']:
         m_data = m['node']['title']
@@ -158,7 +155,7 @@ def get_movies(url):
             'plot': m_data.get('plot', {}).get('plotText', {}).get('plainText', {}) if((m_data.get('plot', {}) != None) and (m_data.get('plot', {}).get('plotText', {}) != None)) else None
         }
 
-        movies_payload['movies'].append(current_movie)
+        movies_payload.append(current_movie)
     
     return movies_payload
 
@@ -190,9 +187,18 @@ def scrape_data_main(query):
     url_filters.update({
         'sort': sort_type,
         'order': sort_order,
-        'load_limit': search_data['count'],
-        'excluded': search_data['excluded_genres']
+        'load_limit': search_data['count']
     })
+
+    if 'excluded' not in new_query:
+        url_filters.update({
+            'excluded': search_data['defaults'].get('excluded')
+        })
+
+    if 'popularity' not in new_query:
+        url_filters.update({
+            'popularity': search_data['defaults'].get('popularity')
+        })
 
     #Must fix:
 
@@ -234,8 +240,14 @@ def scrape_data_main(query):
         #return {'data': super_url}
 
         #return {'url': search_url}
+        #return {'data1': new_query}
 
-        return {'data': movie_list, 'url': search_url}
+        if len(movie_list) > search_data['selection_limit']:
+            selected_movies = random_sample(movie_list, search_data['selection_limit'])
+        else:
+            selected_movies = movie_list
+
+        return {'data': selected_movies, 'url': search_url}
     except Exception as err:
         return {'err': str((err))}
 

@@ -5,11 +5,20 @@ import SelectedBar from "./Components/SelectedBar.jsx"
 const qs = require('qs')
 
 
-async function requestData(query, hook){
+async function requestData(query, setData){
   let path = "/search"
 
   const queryParams = query
-  const searchParams = qs.stringify(queryParams)
+  const searchParams = qs.stringify(queryParams, {
+    encoder: (value) => {
+      if (typeof(value) === 'number' || typeof(value) === 'boolean') {
+        return String(value); 
+      }
+      else{
+        return value;
+      }
+    },
+  })
   path += `?${searchParams}`
   console.log(path)
 
@@ -21,7 +30,7 @@ async function requestData(query, hook){
 
   console.log(returnedData)
 
-  hook(returnedData)
+  setData(returnedData)
 }
 
 async function requestFilters() {
@@ -37,7 +46,7 @@ async function requestFilters() {
 
 function App(){
   const [filters, setFilters] = useState([])
-  const [serverData, setServerData] = useState(null)
+  const [moviesData, setMoviesData] = useState({})
 
   const [selected, setSelected] = useState({display:{}, request:{}})
   
@@ -48,9 +57,9 @@ function App(){
   }, [])
 
   useEffect( () =>{
-    console.log(serverData)
+    console.log(moviesData)
     
-  }, [serverData])
+  }, [moviesData])
 
   useEffect( () =>{
     console.log(selected.display)
@@ -60,17 +69,20 @@ function App(){
 
   return(
     <main id="main-content">
-      <SelectedBar selected={selected} setSelected={setSelected}/> 
-      <h1> Encuentra tu película </h1>
-      {
-      <section>
-        {filters.map((fil)=>(
-          <FilterBlock filterData={fil} selected={selected} setSelected={setSelected}/>
-        ))}
-      </section>
-}
-      <button onClick = {()=>requestData(selected.request, setServerData)} id="search-button">Buscar</button>
+      <h1> What are you watching today? </h1>
+      {}
 
+      <section>
+        <SelectedBar selected={selected} setSelected={setSelected}/> 
+        {
+        <section>
+          {filters.map((fil)=>(
+            <FilterBlock filterData={fil} selected={selected} setSelected={setSelected}/>
+          ))}
+        </section>
+        }
+        <button onClick = {()=>requestData(selected.request, setMoviesData)} id="search-button">Buscar</button>
+      </section>
     </main>
   )
 }
