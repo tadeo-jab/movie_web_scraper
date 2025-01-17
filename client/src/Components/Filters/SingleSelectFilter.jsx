@@ -1,29 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function SingleSelectFilter({filterData, selected, setSelected}){
 
+    const filName = filterData.displayText
+    const filId = filterData.filterId
+    const filOptions = filterData.options
+
     function selectOption(option){
-        if(selected.display?.[filterData.displayText] !== option){
+        if(selected.display?.[filName] !== option){
             setSelected((prevState)=>({
-                display: {...prevState.display, [filterData.displayText]: option},
-                request: {...prevState.request, [filterData.filterId]: filterData.options[option]}
+                display: {...prevState.display, [filName]: option},
+                request: {...prevState.request, [filId]: filOptions[option]}
             }))
         }  
     }
 
     function deselectOption(option){
-        if(selected.display?.[filterData.displayText] === option){
+        if(selected.display?.[filName] === option){
             setSelected((prevState)=>{
-                const newDisplay = {...prevState.display}
-                const newRequest = {...prevState.request}
+                const newState = {...prevState}
     
-                delete newDisplay[filterData.displayText]
-                delete newRequest[filterData.filterId]
+                delete newState.display[filName]
+                delete newState.request[filId]
     
-                return {
-                    display: {...newDisplay},
-                    request: {...newRequest}
-                }
+                return newState
             })
         }  
     }
@@ -32,10 +32,10 @@ export default function SingleSelectFilter({filterData, selected, setSelected}){
         <article>
             {
             <div>
-                {filterData.options != null ?(
-                    Object.keys(filterData.options).map((o)=>(
+                {filOptions != null ?(
+                    Object.keys(filOptions).map((o)=>(
                         <div> 
-                            <button onClick={()=> selectOption(o)} disabled={selected.display?.[filterData.displayText] === o}>{o}</button>
+                            <button onClick={()=> selectOption(o)} disabled={selected.display?.[filName] === o}>{o}</button>
                             <button onClick={()=> deselectOption(o)}>X</button>
                         </div>
                 ))) : null}

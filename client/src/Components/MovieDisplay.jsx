@@ -23,6 +23,9 @@ export default function SelectedBar({movieList, setMoviesData}){
         </div>
     )
 
+
+    //If there are no movies after the current one, the "Next" button is hidden.
+    
     function displayMovie(){
         if(movieList.length === movieCount.current + 1){
             return(

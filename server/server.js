@@ -4,40 +4,40 @@ const scraperPersistence = require('./persistence/scraper-persistence.json');
 const qs = require('qs')
 
 const app = express()
+
 const movieScraperPath = 'scraper/imdb_scraper.py'
 const countryScraperPath = 'scraper/country_scraper.py'
 
+//Runs the Python programs as Child Processes
 
-function scraperChildProcess(path, params){
-    const pythonProcess = spawn('python', [path, JSON.stringify(params)]);
+function scraperChildProcess(path, args1={}, args2={}){
+    return new Promise((res, rej) => {
+        const pythonProcess = spawn('python', [path, JSON.stringify(args1), JSON.stringify(args2)]);
 
-    let dataBuffer = '';
+        let output = '';
+        let errorOutput = '';
 
-    pythonProcess.stdout.on('data', (data) => {
-        dataBuffer += data.toString();
-    });
+        pythonProcess.stdout.on('data', (data) => {
+            output += data.toString();
+        });
 
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Error: ${data}`);
-    });
+        pythonProcess.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
 
+        pythonProcess.on('close', (code) => {
+            if (code === 0) {
+                res(JSON.parse(output));
+            } else {
+                rej(new Error(`Process exited with code ${code}: ${errorOutput}`));
+            }
+        });
 
-
-    pythonProcess.on('close', (code) => {
-        if (code === 0) {
-        try {
-            const scrapedData = JSON.parse(dataBuffer);
-            res.status(200).json(scrapedData);
-        } catch (err) {
-            res.status(500).json({ error: 'Failed to parse Python script output' });
-        }
-        } else {
-            res.status(500).json({ error: 'Python script failed to execute', data: dataBuffer });
-        }
-        
     });
 }
 
+
+//Parses non-string values from the query params
 
 app.set('query parser', (queryString) => {
     return qs.parse(queryString, {
@@ -56,74 +56,39 @@ app.set('query parser', (queryString) => {
     });
 });
 
-app.get("/filters", (req, res)=>{
-    const filters = scraperPersistence.filters
 
-    const countryProcess = spawn('python', [countryScraperPath, JSON.stringify(scraperPersistence.client_utils)]);
+//Passes the necessary initial data to the front-end.
+//Would usually be part of some sort of database, but it's emulated through a JSON persistence file.
 
-    let countryBuffer = '';
+//Runs the "Country Scraper" process, returning a list of countries and their codes to be passed as filters for the movie search.
 
-    countryProcess.stdout.on('data', (data) => {
-        countryBuffer += data.toString();
-    });
-
-    countryProcess.stderr.on('data', (data) => {
-        console.error(`Error: ${data}`);
-    });
-
-
-
-    countryProcess.on('close', (code) => {
-        if (code === 0) {
-        try {
-            const countryData = JSON.parse(countryBuffer);
-            const countryIndex =  filters.findIndex(fil => fil.filterId === "country")
-            filters[countryIndex].options = countryData.data
-            res.status(200).json(filters);
-        } catch (err) {
-            res.status(500).json({ error: 'Failed to parse Python script output' });
-        }
-        } else {
-            res.status(500).json({ error: 'Python script failed to execute', data: countryBuffer });
-        }
-    });
+app.get("/filters", async (req, res)=>{
+    try{
+        const filters = scraperPersistence.filters
+    
+        const countryData = await scraperChildProcess(countryScraperPath, scraperPersistence.client_utils)
+    
+        const countryIndex =  filters.findIndex(fil => fil.filterId === "country")
+        filters[countryIndex].options = countryData.data
+    
+        res.status(200).json(filters);
+    }
+    catch(err){
+        res.status(500).json({error: err})
+    }
 })
 
 
-app.get('/search', (req, res) => {
+//Passes the returned movie data
 
-    //res.status(200).json({'xd':req.query})
-    
-    //JSON.stringify(req.query)
-    
-    const pythonProcess = spawn('python', [movieScraperPath, JSON.stringify(req.query), JSON.stringify(scraperPersistence)]);
-
-    let dataBuffer = '';
-
-    pythonProcess.stdout.on('data', (data) => {
-        dataBuffer += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Error: ${data}`);
-    });
-
-
-
-    pythonProcess.on('close', (code) => {
-        if (code === 0) {
-        try {
-            const scrapedData = JSON.parse(dataBuffer);
-            res.status(200).json(scrapedData);
-        } catch (err) {
-            res.status(500).json({ error: 'Failed to parse Python script output' });
-        }
-        } else {
-            res.status(500).json({ error: 'Python script failed to execute', data: dataBuffer });
-        }
-        
-    });
-    
+app.get('/search', async (req, res) => {
+    try{
+        const moviesData = await scraperChildProcess(movieScraperPath, req.query, scraperPersistence)
+        res.status(200).json(moviesData);
+    }
+    catch(err){
+        res.status(500).json({error: err})
+    }
 });
 
 app.listen(5000, () => {console.log("Server started on port 5000")})

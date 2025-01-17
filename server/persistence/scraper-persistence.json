@@ -37,8 +37,8 @@
                 "Golden Globe - Winner": {"eventId": "ev0000292", "winnerFilter": "WINNER_ONLY"},
                 "Emmy Award - Nominated": {"eventId": "ev0000223"},
                 "Emmy Award - Winner": {"eventId": "ev0000223", "winnerFilter": "WINNER_ONLY"},
-                "Razzie - Nominated": {"eventId": "0000558"},
-                "Razzie - Winner": {"eventId": "0000558", "winnerFilter": "WINNER_ONLY"},
+                "Razzie - Nominated": {"eventId": "ev0000558"},
+                "Razzie - Winner": {"eventId": "ev0000558", "winnerFilter": "WINNER_ONLY"},
                 "Best Director - Nominated": {"eventId": "ev0000003", "searchAwardCategoryId": "bestDirector"},
                 "Best Director - Winner": {"eventId": "ev0000003", "searchAwardCategoryId": "bestDirector" ,"winnerFilter": "WINNER_ONLY"},
                 "Best Picture - Nominated": {"eventId": "ev0000003", "searchAwardCategoryId": "bestPicture"},
@@ -149,6 +149,10 @@
             "sha256Hash": "60a7b8470b01671336ffa535b21a0a6cdaf50267fa2ab55b3e3772578a8c1f00",
             "version": 1
             }
+        },
+        "credit_search":{
+            "base_url": "https%3A//caching.graphql.imdb.com/%3FoperationName%3DFindPageSearch%26variables%3D%7B%22first%22%3A1%2C%22includeAdult%22%3Afalse%2C%22isExactMatch%22%3Afalse%2C%22locale%22%3A%22en-US%22%2C%22numResults%22%3A1%2C%22searchTerm%22%3A%22%23%23%23%23%23%23%22%2C%22skipHasExact%22%3Atrue%2C%22typeFilter%22%3A%22NAME%22%7D%26extensions%3D%7B%22persistedQuery%22%3A%7B%22sha256Hash%22%3A%22038ff5315025edc006d874aa81178b17335fcae8fecc25bf7c2ce3f1b8085b60%22%2C%22version%22%3A1%7D%7D",
+            "key":"######"
         }
     },
     "search_utils": {

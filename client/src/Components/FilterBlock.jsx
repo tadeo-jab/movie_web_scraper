@@ -7,12 +7,7 @@ import CountryInputFilter from "./Filters/CountryInputFilter.jsx";
 
 export default function FilterBlock({filterData, selected, setSelected }){
 
-    function updateHandler(option){
-        setSelected((prevState)=>({
-            display: {...prevState.display, [filterData.displayText]: option},
-            request: {...prevState.request, [filterData.filterId]: filterData.options[option]}
-        }))
-    }
+    //According to each filters' needs, a different type is rendered.
 
     function renderComponent(typeId){
         switch(typeId){
@@ -37,19 +32,6 @@ export default function FilterBlock({filterData, selected, setSelected }){
             <div>
                 {renderComponent(filterData.type)}
             </div>
-        {/*
-        <article>
-            <div>{filterData['display-name']}</div>
-            {
-            <div>
-                {filterData.options != null ?(
-                    Object.keys(filterData.options).map((o, k)=>(
-                    <button onClick={()=> updateHandler(o)} key={k}>{o}</button>
-                ))) : null}
-            </div>
-            }
-        </article>
-        */}
         </article>
     )
 }

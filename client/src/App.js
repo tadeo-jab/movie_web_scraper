@@ -5,11 +5,13 @@ import SelectedBar from "./Components/SelectedBar.jsx"
 import MovieDisplay from "./Components/MovieDisplay.jsx"
 const qs = require('qs')
 
+//qs is used to allow for nested objects in the URL.
 
-async function requestData(query, setData){
+async function requestMovies(query, setData){
   let path = "/search"
 
   const queryParams = query
+
   const searchParams = qs.stringify(queryParams, {
     encoder: (value) => {
       if (typeof(value) === 'number' || typeof(value) === 'boolean') {
@@ -20,16 +22,14 @@ async function requestData(query, setData){
       }
     },
   })
+  
   path += `?${searchParams}`
-  console.log(path)
 
   const incomingData = await fetch(path, {
     method: "GET"
   })
 
   const returnedData = await incomingData.json()
-
-  console.log(returnedData)
 
   setData(returnedData)
 }
@@ -44,6 +44,11 @@ async function requestFilters() {
   return await incomingData.json()
 }
 
+//The idea is for the user to select the filters they want in the movie search.
+
+//When updating the filter selection, it updates two objects:
+//The "Display" values, which are seen on the front-end rendering.
+//And the "Request" values, which are what the back-end receives through query params.
 
 function App(){
   const [filters, setFilters] = useState([])
@@ -51,22 +56,17 @@ function App(){
 
   const [selected, setSelected] = useState({display:{}, request:{}})
   
+
+  //The request for the initial data is only performed at the first render.
+
   useEffect(()=>{
     requestFilters().then((data)=>{
       setFilters(data)
     })
   }, [])
 
-  useEffect( () =>{
-    console.log(moviesData)
-    
-  }, [moviesData])
-
-  useEffect( () =>{
-    console.log(selected.display)
-    console.log(selected.request)
-    
-  }, [selected])
+  //Depending on whether the data has been received from the server, a different view is rendered.
+  //Each filter option is rendered dynamically.
 
   return(
     <main id="main-content">
@@ -81,13 +81,11 @@ function App(){
             ))}
           </section>
           }
-          <button onClick = {()=>requestData(selected.request, setMoviesData)} id="search-button">Buscar</button>
+          <button onClick = {()=>requestMovies(selected.request, setMoviesData)} id="search-button">Buscar</button>
         </section>
       ): (
         <MovieDisplay movieList={moviesData.data} setMoviesData={setMoviesData}/>
       )}
-
-      
     </main>
   )
 }

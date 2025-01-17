@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 
 export default function MultiSelectFilter({filterData, selected, setSelected}){
 
+    const filName = filterData.displayText
+    const filId = filterData.filterId
+    const filOptions = filterData.options
+
 
     function selectOption(option){
-        if(!(filterData.filterId in selected.request)){
+        if(!(filId in selected.request)){
             setSelected((prevState)=>({
-                display: {...prevState.display, [filterData.displayText]: [option]},
-                request: {...prevState.request, [filterData.filterId]: [filterData.options[option]]}
+                display: {...prevState.display, [filName]: [option]},
+                request: {...prevState.request, [filId]: [filOptions[option]]}
             }))
         }
-        else if((filterData.filterId in selected.request) && !(selected.display?.[filterData.displayText]?.includes(option))){
+        else if((filId in selected.request) && !(selected.display?.[filName]?.includes(option))){
             setSelected((prevState)=>({
-                display: {...prevState.display, [filterData.displayText]: [...prevState.display[filterData.displayText], option]},
-                request: {...prevState.request, [filterData.filterId]: [...prevState.request[filterData.filterId], filterData.options[option]]}
+                display: {...prevState.display, [filName]: [...prevState.display[filName], option]},
+                request: {...prevState.request, [filId]: [...prevState.request[filId], filOptions[option]]}
             }))
         }  
     }
 
     function deselectOption(option){
-        if(selected.display?.[filterData.displayText]?.length === 1){
+        if(selected.display?.[filName]?.length === 1){
             setSelected((prevState)=>{
                 const newState = {...prevState}
     
-                delete newState.display[filterData.displayText]
-                delete newState.request[filterData.filterId]
+                delete newState.display[filName]
+                delete newState.request[filId]
     
                 return newState
             })
         }
         else{
             setSelected((prevState)=>({
-                display: {...prevState.display, [filterData.displayText]: prevState.display[filterData.displayText].filter(item => item !== option)},
-                request: {...prevState.request, [filterData.filterId]: prevState.request[filterData.filterId].filter(item => item !== filterData.options[option])}
+                display: {...prevState.display, [filName]: prevState.display[filName].filter(item => item !== option)},
+                request: {...prevState.request, [filId]: prevState.request[filId].filter(item => item !== filOptions[option])}
             }))
         }
         
@@ -42,10 +46,10 @@ export default function MultiSelectFilter({filterData, selected, setSelected}){
         <article>
             {
             <div>
-                {filterData.options != null ?(
-                    Object.keys(filterData.options).map((o)=>(
+                {filOptions != null ?(
+                    Object.keys(filOptions).map((o)=>(
                         <div> 
-                            <button onClick={()=> selectOption(o)} disabled={selected.display?.[filterData.displayText]?.includes(o)}>{o}</button>
+                            <button onClick={()=> selectOption(o)} disabled={selected.display?.[filName]?.includes(o)}>{o}</button>
                             <button onClick={()=> deselectOption(o)}>X</button>
                         </div>
                 ))) : null}

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 
 export default function CountryInputFilter({filterData, selected, setSelected}){
 
@@ -37,6 +37,8 @@ export default function CountryInputFilter({filterData, selected, setSelected}){
         }
     }
 
+    //The user can only select a country present in the drop-down list
+    //The dropdown is hidden until the user begins typing
 
     return(
         <article>

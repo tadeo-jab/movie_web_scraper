@@ -4,6 +4,10 @@ import json
 import sys
 import re
 
+#There are many more practical ways to get a country codes list.
+#I figured this method is more in line with the "web scraping" scope of the project.
+#The scraping is done more conventionally than the movie process, reading a static web page.
+
 def country_scraper_main(url):
     res = requests.get(url)
 
