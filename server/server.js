@@ -7,21 +7,37 @@ const app = express()
 const movieScraperPath = 'scraper/imdb_scraper.py'
 const countryScraperPath = 'scraper/country_scraper.py'
 
-const sampleSelect = {
-    genres: ['Crime', 'Thriller'],
-    country: 'US',
-    date: {"end": "2024-12-31", "start": "1980-01-01"},
-    runtime: {"max": 180, "min": 1},
-    actor: 'samuel l jackson',
-    director: 'quentin tarantino',
-    type: 'movie',
-    rating: {"max": 9.9, "min": 5},
-    parental: 'R',
-    animated: false,
-    popularity: {"max": 3000000, "min": 100000},
-    awards: [{"eventId": 'ev0000292'}],
-    company: ['co0023400']
+
+function scraperChildProcess(path, params){
+    const pythonProcess = spawn('python', [path, JSON.stringify(params)]);
+
+    let dataBuffer = '';
+
+    pythonProcess.stdout.on('data', (data) => {
+        dataBuffer += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Error: ${data}`);
+    });
+
+
+
+    pythonProcess.on('close', (code) => {
+        if (code === 0) {
+        try {
+            const scrapedData = JSON.parse(dataBuffer);
+            res.status(200).json(scrapedData);
+        } catch (err) {
+            res.status(500).json({ error: 'Failed to parse Python script output' });
+        }
+        } else {
+            res.status(500).json({ error: 'Python script failed to execute', data: dataBuffer });
+        }
+        
+    });
 }
+
 
 app.set('query parser', (queryString) => {
     return qs.parse(queryString, {

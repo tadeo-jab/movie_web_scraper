@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import './App.css'
 import FilterBlock from "./Components/FilterBlock.jsx"
 import SelectedBar from "./Components/SelectedBar.jsx"
+import MovieDisplay from "./Components/MovieDisplay.jsx"
 const qs = require('qs')
 
 
@@ -46,7 +47,7 @@ async function requestFilters() {
 
 function App(){
   const [filters, setFilters] = useState([])
-  const [moviesData, setMoviesData] = useState({})
+  const [moviesData, setMoviesData] = useState(null)
 
   const [selected, setSelected] = useState({display:{}, request:{}})
   
@@ -70,19 +71,23 @@ function App(){
   return(
     <main id="main-content">
       <h1> What are you watching today? </h1>
-      {}
-
-      <section>
-        <SelectedBar selected={selected} setSelected={setSelected}/> 
-        {
+      {moviesData === null ? (
         <section>
-          {filters.map((fil)=>(
-            <FilterBlock filterData={fil} selected={selected} setSelected={setSelected}/>
-          ))}
+          <SelectedBar filters={filters} selected={selected} setSelected={setSelected}/> 
+          {
+          <section>
+            {filters.map((fil)=>(
+              <FilterBlock filterData={fil} selected={selected} setSelected={setSelected}/>
+            ))}
+          </section>
+          }
+          <button onClick = {()=>requestData(selected.request, setMoviesData)} id="search-button">Buscar</button>
         </section>
-        }
-        <button onClick = {()=>requestData(selected.request, setMoviesData)} id="search-button">Buscar</button>
-      </section>
+      ): (
+        <MovieDisplay movieList={moviesData.data} setMoviesData={setMoviesData}/>
+      )}
+
+      
     </main>
   )
 }

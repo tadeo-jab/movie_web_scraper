@@ -200,8 +200,6 @@ def scrape_data_main(query):
             'popularity': search_data['defaults'].get('popularity')
         })
 
-    #Must fix:
-
     if new_query.get('animated', None) != None:
         del url_filters['animated']
         if (new_query['animated']) and (new_query.get('genres', None) != None):
